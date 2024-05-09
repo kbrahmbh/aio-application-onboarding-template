@@ -1,0 +1,12 @@
+name: "Please fill the details below to onboard your AIO Application"
+namespace: Lana
+usecase: This is required for logging
+status: production
+security_review: test
+known_proxies: test
+example_urls: https://example.com,https://test.com
+engineering_owner: Kinjal
+monitors: Lana
+documentation: https://github.com/kbrahmbh/milo-college
+repo: https://github.com/kbrahmbh/milo-college
+misc:
