@@ -1,0 +1,37 @@
+name: "AIO Application form validation"
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+jobs:
+  run-lint:
+    name: Running yamlint
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install yamllint
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+        run: pip3 install yamllint
+    
+    - name: Install yq
+      run: sudo snap install yq 
+              
+    - name: Run yamlint against aio_application_onboarding_form.yml
+      run: yamllint .aio/aio_application_onboarding_form.yml
+
+    - name: Validate aio_application_onboarding_form.yml
+      run: | 
+        # Retrieve the field values to validate
+        aio_application_status=$(yq eval '.namespace != null and .usecase != null and .status != null and .security_review != null and .known_proxies != null and .example_urls != null and .engineering_owner != null and .monitors != null and .documentation != null and .repo != null ' .aio/aio_application_onboarding_form.yml)
+        if [ "$aio_application_status" = "true" ]; then
+            echo "Yay!! AIO Application on-boarding complete !!!!!"
+        else
+            echo "THIS PR WILL BE MARKED FAILED. Please complete AIO application onboarding form"
+            exit 1
+        fi
